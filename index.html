@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Rails devise with mail by therise3107</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Rails devise with mail</h1>
+        <h2>Rails,Devise,Email</h2>
+        <a href="https://github.com/therise3107/rails_devise_with_mail" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="rails-devise-app-with-email" class="anchor" href="#rails-devise-app-with-email" aria-hidden="true"><span class="octicon octicon-link"></span></a>rails devise app with email</h1>
+
+<p>fully functional app demonstarting how to use DEVISE with MAILING facility.</p>
+
+<p>Additional Gems which are used :-</p>
+
+<ul>
+<li><p>rails_layout</p></li>
+<li><p>devise</p></li>
+<li><p>bootstrap</p></li>
+<li><p>better_error</p></li>
+</ul>
+
+<h2>
+<a id="create-a-new-rails-project" class="anchor" href="#create-a-new-rails-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>create a new rails project</h2>
+
+<pre><code>rails new devise_app
+</code></pre>
+
+<p>switch you your newly created app</p>
+
+<pre><code>cd devise_app
+</code></pre>
+
+<p>open your Gemfile and add</p>
+
+<pre><code>group :development do
+  gem "better_errors"
+end
+</code></pre>
+
+<h3>
+<a id="bootstrap-for-some-awesome-features" class="anchor" href="#bootstrap-for-some-awesome-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>bootstrap for some awesome features</h3>
+
+<pre><code>gem 'bootstrap-sass', '~&gt; 3.2.0'
+gem 'autoprefixer-rails'
+gem 'devise'
+</code></pre>
+
+<h3>
+<a id="rails_layout-for-bootstrap-or-zorb-foundation" class="anchor" href="#rails_layout-for-bootstrap-or-zorb-foundation" aria-hidden="true"><span class="octicon octicon-link"></span></a>rails_layout for bootstrap or zorb foundation</h3>
+
+<pre><code>group :development do
+  gem 'rails_layout'
+end
+</code></pre>
+
+<p>run bundle to install the new gems</p>
+
+<pre><code>bundle
+</code></pre>
+
+<h3>
+<a id="configuring-rails_layout-for-handling-bootstrap" class="anchor" href="#configuring-rails_layout-for-handling-bootstrap" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuring rails_layout for handling bootstrap</h3>
+
+<p>run </p>
+
+<pre><code>rails g layout:install bootstrap3
+</code></pre>
+
+<p>to install bootstap3 for your app </p>
+
+<pre><code>rails g scaffold post title body:text
+rake db:migrate
+</code></pre>
+
+<p>this will create the post model, controller and views for you</p>
+
+<h3>
+<a id="configure-devise" class="anchor" href="#configure-devise" aria-hidden="true"><span class="octicon octicon-link"></span></a>configure Devise</h3>
+
+<pre><code>rails g devise:install
+rails g devise user
+rake db:migrate
+</code></pre>
+
+<p>this will create a user model for handling the user accounts</p>
+
+<h3>
+<a id="configuring-layout-for-devise-and-navigational-links" class="anchor" href="#configuring-layout-for-devise-and-navigational-links" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuring layout for devise and navigational links</h3>
+
+<pre><code>rails g layout:devise bootstrap3
+rails g layout:navigation
+</code></pre>
+
+<p>these commands will add and modify the view files for devise and will add navigation at home page</p>
+
+<h3>
+<a id="creating-the-mailer" class="anchor" href="#creating-the-mailer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating the mailer</h3>
+
+<pre><code>rails g mailer mailer
+</code></pre>
+
+<p>this will create a mailer for you in app/mailer/mailer.rb , open mailer.rb and add the following code</p>
+
+<pre><code>default from: "from@example.com"
+def confirmation_instructions(user)
+  @user = user
+  mail(to: @user.email, subject: 'Account confirmation_instructions')
+end
+
+def reset_password_instructions(user)
+  @user = user
+  mail(to: @user.email, subject: 'reset_password_instructions')
+end
+def unlock_instructions(user)
+  @user = user
+  mail(to: @user.email, subject: 'unlock_instructions')
+end
+</code></pre>
+
+<p>this are the functions which will be invoked by devise for you, to change the views created by devise for you run</p>
+
+<pre><code>rails g devise:views
+</code></pre>
+
+<h3>
+<a id="smtp-configuration" class="anchor" href="#smtp-configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>SMTP configuration</h3>
+
+<p>add these lines of code in your config/env/develpoment.rb</p>
+
+<pre><code>config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+config.action_mailer.delivery_method = :smtp
+# SMTP settings for gmail
+config.action_mailer.smtp_settings = {
+  :address              =&gt; "smtp.gmail.com",
+  :port                 =&gt; 587,
+  :user_name            =&gt; ENV['gmail_user_name'],
+  :password             =&gt; ENV['gmail_password'],
+  :authentication       =&gt; "plain",
+  :enable_starttls_auto =&gt; true
+  }
+</code></pre>
+
+<p>and set </p>
+
+<pre><code>config.action_mailer.raise_delivery_errors = true
+</code></pre>
+
+<p>this will raise errors whenever you mess up, but do not worry we have added better_errors!</p>
+
+<h3>
+<a id="setting-env-variables" class="anchor" href="#setting-env-variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Setting ENV variables</h3>
+
+<p>create a new .env file in your root dir and add</p>
+
+<pre><code>ENV["gmail_user_name"] = yourgamiladdres.com
+ENV["gmail_password"]  = youpassword
+</code></pre>
+
+<p>do not forget to add .env file in you .gitignore file if you are going to push your app on github</p>
+
+<h3>
+<a id="adding-relationship-between-models" class="anchor" href="#adding-relationship-between-models" aria-hidden="true"><span class="octicon octicon-link"></span></a>Adding relationship between models</h3>
+
+<p>add this in your app/model/user.rb</p>
+
+<pre><code>  has_many :posts
+</code></pre>
+
+<p>add this in your app/post.rb</p>
+
+<pre><code>  belongs_to :user
+</code></pre>
+
+<h3>
+<a id="user-auth-mechanism" class="anchor" href="#user-auth-mechanism" aria-hidden="true"><span class="octicon octicon-link"></span></a>User Auth Mechanism</h3>
+
+<p>add this code in your posts_controller.rb</p>
+
+<pre><code>before_action :authenticate_user!,only: [:new,:edit, :update, :destroy]
+before_action :own_auth, only: [:new,:edit, :update, :destroy]
+....
+....
+def create
+  @post = Post.new(post_params)
+  @user_id = current_user.id
+  @post.save
+  respond_with(@post)
+end
+....
+....
+private
+ def own_auth
+  if !user_signed_in? || current_user != Post.find(params[:id])
+    redirect_to root_path, notice: "you cannot modify this content, please authenticate yourself"
+  end
+end
+</code></pre>
+
+<p>now run </p>
+
+<pre><code>rails s
+</code></pre>
+
+<p>and enjoy your newly  created site</p>
+
+<p>created by <strong>Lalit Yadav</strong> </p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/therise3107/rails_devise_with_mail/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/therise3107/rails_devise_with_mail/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/therise3107/rails_devise_with_mail"></a> is maintained by <a href="https://github.com/therise3107">therise3107</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-59198408-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
