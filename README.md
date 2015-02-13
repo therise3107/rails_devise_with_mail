@@ -55,8 +55,8 @@ this will create a user model for handling the user accounts
 
 ### Configuring layout for devise and navigational links
 
-    rails g layout:devise bootstrap3
     rails g layout:navigation
+    rails g layout:devise bootstrap3
 these commands will add and modify the view files for devise and will add navigation at home page
 ### Creating the mailer 
 
